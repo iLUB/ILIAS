@@ -121,6 +121,12 @@ class ilObjMediaObjectAccess implements ilWACCheckingClass {
 				}
 				break;
 
+			//Self Evaluation, visible with read access on instance
+			case "xsev:html":
+				global $ilAccess;
+				return $ilAccess->checkAccess("read","", $usage["id"]);
+				break;
+
 			case 'frm~:html':
 			case 'exca~:html':
 				// $oid = userid
