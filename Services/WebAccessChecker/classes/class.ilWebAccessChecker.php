@@ -92,8 +92,12 @@ class ilWebAccessChecker {
 	 */
 	public function check() {
 		if (!$this->getPathObject()) {
-			throw new ilWACException(ilWACException::CODE_NO_PATH);
-		}
+            throw new ilWACException(ilWACException::CODE_NO_PATH);
+        }
+
+        if ($_SERVER["REMOTE_ADDR"] == $_SERVER["SERVER_ADDR"]) {
+            return true;
+        }
 
 		// Check if Path has been signed with a token
 		$ilWACSignedPath = new ilWACSignedPath($this->getPathObject(), $this->http, $this->cookieFactory);
