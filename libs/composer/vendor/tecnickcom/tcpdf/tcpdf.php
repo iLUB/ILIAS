@@ -6826,7 +6826,15 @@ class TCPDF {
 	 * @since 1.1
 	 */
 	public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array()) {
-		if ($this->state != 2) {
+        //TA Fix path to files in data directory
+        if(strpos($file, '/data/') !== false){
+            $file = explode( "?" , $file)[0];
+            $request_scheme = $_SERVER["HTTPS"] == "on" ? "https":"http";
+            $file = str_replace($request_scheme."://".$_SERVER["HTTP_HOST"],$_SERVER["DOCUMENT_ROOT"],$file);
+            $file = str_replace('%20', ' ', $file);
+        }
+
+        if ($this->state != 2) {
 			return;
 		}
 		if (strcmp($x, '') === 0) {
@@ -18832,7 +18840,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			}
 			case 'img': {
 				if (!empty($tag['attribute']['src'])) {
-					if ($tag['attribute']['src'][0] === '@') {
+                    //TA: Fix since this leads to error in files with spaces
+                    $tag['attribute']['src'] = str_replace(' ', '%20', $tag['attribute']['src']);
+                    if ($tag['attribute']['src'][0] === '@') {
 						// data stream
 						$tag['attribute']['src'] = '@'.base64_decode(substr($tag['attribute']['src'], 1));
 						$type = '';
