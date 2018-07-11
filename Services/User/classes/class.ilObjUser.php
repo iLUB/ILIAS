@@ -4005,7 +4005,15 @@ class ilObjUser extends ilObject
 				}
 				else
 				{
-					$short = ilStr::subStr($login, 0, 2);
+                    // TZ_start: $short includes lowercase letters that don't look nice. Use uppercase only!
+                    //           (mantis id=1178)
+                    $short = strtoupper(ilStr::subStr($firstname, 0, 1)) . strtoupper(ilStr::subStr($lastname, 0, 1));
+                    if($short == NULL) {
+                        $short = "-";
+                    }
+                    // TZ_end
+
+					// $short = ilStr::subStr($login, 0, 2);
 				}
 
 				/** @var $avatar ilUserAvatarBase */
